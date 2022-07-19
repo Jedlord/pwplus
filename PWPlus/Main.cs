@@ -4,7 +4,8 @@ using System.IO;
 using System.Text;
 using MelonLoader;
 using UnityEngine;
-
+using Microsoft.Win32;
+using System.Linq;
 
 namespace PWPlus
 {
@@ -13,6 +14,8 @@ namespace PWPlus
         public static MelonLogger.Instance Logger;
         public static Tab tab = Tab.None;
         public static World world;
+        public static Player player;
+        public static PlayerData playerData;
         private static int totalgems;
         private static string worldToWarp = "";
         private static bool showMenu = true;
@@ -23,7 +26,6 @@ namespace PWPlus
         {
             LoggerInstance.Msg(ConsoleColor.Cyan, "Starting PW Plus...");
             Logger = LoggerInstance;
-            
         }
         
         // on quit
@@ -53,7 +55,7 @@ namespace PWPlus
             {
                 tab = Tab.WorldWarper;
             }
-            if (GUI.Button(new Rect(166.600f, 16.5f, 83.333f, 33f), "Misc"))
+            if (GUI.Button(new Rect(166.600f, 16.5f, 83.333f, 33f), "Gem Seller"))
             {
                 tab = Tab.GemSeller;
             }
@@ -78,7 +80,7 @@ namespace PWPlus
 
                             foreach (CollectableData collectable in world.collectables)
                             {
-                                totalgems += (Tools.GemCalculator.GetGemAmount(collectable.blockType) * collectable.amount);
+                                totalgems += (Tools.GemCalculator.GetGemAmount(collectable.blockType) * collectable.amount); 
                             }
                         }
                         else
@@ -93,7 +95,9 @@ namespace PWPlus
                 case Tab.WorldWarper:
                     // Warp World Tab
                     GUI.Label(new Rect(5f, 50f, 100f, 20f), "Warp To World");
+                    
                     worldToWarp = GUI.TextField(new Rect(125f, 75f, 85f, 33f), worldToWarp);
+                    
                     if (GUI.Button(new Rect(5f, 75f, 115f, 33f), "Warp To World"))
                     {
                         SceneLoader.CheckIfWeCanGoFromWorldToWorld(worldToWarp, "", null, false, null);
@@ -102,12 +106,41 @@ namespace PWPlus
                     break;
 
                 case Tab.GemSeller:
-                    // Misc Tab
+                    // Gem Seller Tab
                     GUI.Label(new Rect(5f, 50f, 100f, 20f), "Gem Seller");
-                    if (GUI.Button(new Rect(5, 75f, 115f, 33f), "Test"))
+                    
+                    if (GUI.Button(new Rect(5, 75f, 115f, 33f), "Sell Gems"))
                     {
-                        Logger.Msg(ConsoleColor.Yellow, "Test");
+                        int gems = 0;
+
+                        var inventory = playerData.GetInventoryAsOrderedByInventoryItemType();
+
+                        for (int i = 0; i < inventory.Count(); i++)
+                        {
+                            short count = playerData.GetCount(inventory[i]);
+                            World.BlockType blockType = inventory[i].blockType;
+
+                            // mgems
+                            if (ConfigData.IsBlockMiningGemstone(blockType))
+                            {
+                                OutgoingMessages.RecycleMiningGemstone(inventory[i], count);
+                                gems += Tools.GemCalculator.GetGemAmount(blockType) * count;
+                                playerData.RemoveItemsFromInventory(inventory[i], count);
+                            }
+
+                            // fgems
+                            if (ConfigData.IsFish(blockType))
+                            {
+                                OutgoingMessages.RecycleFish(inventory[i], count);
+                                gems += Tools.GemCalculator.GetGemAmount(blockType) * count;
+                                playerData.RemoveItemsFromInventory(inventory[i], count);
+                            }
+                        }
+
+                        Logger.Msg(ConsoleColor.Green, $"Recycled: {gems} gems.");
+                        playerData.AddGems(gems);
                     }
+
                     break;
 
                 default:
