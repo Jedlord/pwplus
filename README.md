@@ -10,6 +10,7 @@ It has features such as:
 - And more to come.
 
 To download please visit our website at https://pw-plus.com/
+ - If the version you download does not work, rebuild from the source code until I get around to adding releases on github
 
 # How To Use
 - Make sure you meet the requirements at https://melonwiki.xyz/#/?id=requirements
