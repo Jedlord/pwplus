@@ -10,3 +10,11 @@ It has features such as:
 - And more to come.
 
 To download please visit our website at https://pw-plus.com/
+
+# How To Use
+- Make sure you meet the requirements at https://melonwiki.xyz/#/?id=requirements
+- Install melonloader at https://github.com/HerpDerpinstine/MelonLoader/releases/latest/download/MelonLoader.Installer.exe
+- Follow the steps given at https://melonwiki.xyz/#/?id=automated-installation
+- Add the pwplus dll to the Mods folder
+- You should be good!
+- If you have any additional questions please feel free to reach out to me on discord Jed#4684
