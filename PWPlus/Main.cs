@@ -14,8 +14,8 @@ namespace PWPlus
         public static MelonLogger.Instance Logger;
         public static Tab tab = Tab.None;
         public static World world;
-        public static Player player;
-        public static PlayerData playerData;
+        public static Player player { get { try { return ControllerHelper.worldController.player; } catch { return null; } } }
+        public static PlayerData playerData { get { try { return player.myPlayerData; } catch { return null; } } }
         private static int totalgems;
         private static string worldToWarp = "";
         private static bool showMenu = true;
