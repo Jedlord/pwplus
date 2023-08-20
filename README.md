@@ -18,4 +18,4 @@ To download please visit our website at https://pw-plus.com/
 - Follow the steps given at https://melonwiki.xyz/#/?id=automated-installation
 - Add the pwplus dll to the Mods folder
 - You should be good!
-- If you have any additional questions please feel free to reach out to me on discord Jed#4684
+- If you have any additional questions please feel free to reach out to me on discord: @jed5729
